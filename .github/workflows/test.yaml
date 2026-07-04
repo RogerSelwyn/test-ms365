@@ -2,10 +2,6 @@ name: Python tests
 
 on: [push]
 
-env:
-  UV_SYSTEM_PYTHON: 1
-
-
 jobs:
   build:
     name: Run tests
@@ -23,6 +19,8 @@ jobs:
 
       - name: "Install requirements"
         run: uv pip install -r requirements_test.txt
-        
+        env:
+          UV_SYSTEM_PYTHON: 1
+
       - name: "Run pytest"
         run: uv run pytest tests
