@@ -17,10 +17,11 @@ jobs:
         run: uv python install 3.14
 
 
+      - name: "Create venv"
+        run: uv venv
 
       - name: "Install requirements"
         run: uv pip install -r requirements_test.txt
-
 
       - name: "Run pytest"
         run: uv run pytest tests
