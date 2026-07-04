@@ -9,9 +9,7 @@ from unittest.mock import patch
 import pytest
 from requests_mock import Mocker
 
-from homeassistant.components.notify import DOMAIN as NOTIFY_DOMAIN
 from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
 
 from .const import ENTITY_NAME, LEGACY_TOKEN, TOKEN_LOCATION
 from .helpers.mock_config_entry import MS365MockConfigEntry
