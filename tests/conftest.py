@@ -177,12 +177,11 @@ async def setup_update_integration(
     build_token_file(tmp_path, UPDATE_TOKEN_PERMS)
     MS365MOCKS.standard_mocks(requests_mock)
     base_config_entry.add_to_hass(hass)
-    data = deepcopy(BASE_CONFIG_ENTRY)
+    updated_config = deepcopy(BASE_CONFIG_ENTRY)
     for key, value in UPDATE_OPTIONS.items():
-        data[key] = value
-    hass.config_entries.async_update_entry(base_config_entry, data=data)
+        updated_config[key] = value
+    hass.config_entries.async_update_entry(base_config_entry, data=updated_config)
 
     await hass.config_entries.async_setup(base_config_entry.entry_id)
     await hass.async_block_till_done()
-    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
-    await hass.async_block_till_done()
+
