@@ -1,0 +1,99 @@
+auto_reply_enable:
+  target:
+    entity:
+      integration: ms365_mail
+      domain: sensor
+  fields:
+    external_reply:
+      example: I'm currently on holiday, please email Bob for answers
+      required: true
+      selector:
+        text:
+    internal_reply:
+      example: I'm currently on holliday
+      required: true
+      selector:
+        text:
+    start:
+      example: "2025-01-01T12:00:00+0000"
+      selector:
+        text:
+    end:
+      example: "2025-01-02T12:30:00+0000"
+      selector:
+        text:
+    external_audience:
+      example: all
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - label: "All"
+              value: "all"
+            - label: "Contacts Only"
+              value: "contactsOnly"
+            - label: "None"
+              value: "none"
+
+auto_reply_disable:
+  target:
+    entity:
+      integration: ms365_mail
+      domain: sensor
+
+mail_send:
+  target:
+    entity:
+      integration: ms365_mail
+      domain: sensor
+  fields:
+    subject:
+      required: true
+      example: "Your Garage Door Friend"
+      selector:
+        text:
+    message:
+      required: true
+      example: The garage door has been open for 10 minutes.
+      selector:
+        text:
+    to:
+      example: "- joeblogs@nomail.com"
+      selector:
+        object:
+    from:
+      example: mgmt@noname.org.uk
+      selector:
+        text:
+    importance:
+      example: medium
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - label: "Low"
+              value: "low"
+            - label: "Medium"
+              value: "medium"
+            - label: "High"
+              value: "high"
+    message_is_html:
+      example: false
+      selector:
+        boolean:
+    photos:
+      example: "- /config/documents/image.jpg"
+      selector:
+        object:
+    attachments:
+      example: "- /config/documents/sendfile.txt"
+      selector:
+        object:
+    zip_attachments:
+      example: false
+      selector:
+        boolean:
+    zip_name:
+      example: zipfile.zip
+      selector:
+        text:
