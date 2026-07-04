@@ -6,7 +6,6 @@ from unittest.mock import patch
 import pytest
 from homeassistant.components.notify import DOMAIN as NOTIFY_DOMAIN
 from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
 
 from ..helpers.mock_config_entry import MS365MockConfigEntry
 from ..helpers.utils import build_token_file
@@ -62,8 +61,6 @@ async def test_update_shared_permissions(
     base_config_entry: MS365MockConfigEntry,
 ) -> None:
     """Test shared update permissions."""
-    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
-    await hass.async_block_till_done()
 
     assert "Mail.Send.Shared" in base_config_entry.runtime_data.permissions.permissions
     assert not hass.services.has_service(DOMAIN, "auto_reply_enable")

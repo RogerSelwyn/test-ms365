@@ -8,7 +8,6 @@ import pytest
 from homeassistant.components.notify import DOMAIN as NOTIFY_DOMAIN
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.setup import async_setup_component
 
 from custom_components.ms365_mail.const import CONF_ENABLE_UPDATE
 from custom_components.ms365_mail.integration.const_integration import (
@@ -164,11 +163,8 @@ async def test_autoreply_failed_permission(
 async def test_notify(
     hass: HomeAssistant,
     setup_update_integration,
-    base_config_entry: MS365MockConfigEntry,
 ) -> None:
     """Test notify - HA Service."""
-    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
-    await hass.async_block_till_done()
 
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
@@ -253,12 +249,9 @@ async def test_notify_attachments(
     adjust_config_dir,
     hass: HomeAssistant,
     setup_update_integration,
-    base_config_entry: MS365MockConfigEntry,
     tmp_path,
 ) -> None:
     """Test notify - HA Service."""
-    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
-    await hass.async_block_till_done()
 
     filepath = attachment_setup(tmp_path, "sendfile.txt")
     attachment_setup(tmp_path, "sendphoto.jpg")

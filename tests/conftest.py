@@ -7,8 +7,11 @@ from copy import deepcopy
 from unittest.mock import patch
 
 import pytest
-from homeassistant.core import HomeAssistant
 from requests_mock import Mocker
+
+from homeassistant.components.notify import DOMAIN as NOTIFY_DOMAIN
+from homeassistant.core import HomeAssistant
+from homeassistant.setup import async_setup_component
 
 from .const import ENTITY_NAME, LEGACY_TOKEN, TOKEN_LOCATION
 from .helpers.mock_config_entry import MS365MockConfigEntry
@@ -180,4 +183,6 @@ async def setup_update_integration(
     hass.config_entries.async_update_entry(base_config_entry, data=data)
 
     await hass.config_entries.async_setup(base_config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
     await hass.async_block_till_done()
