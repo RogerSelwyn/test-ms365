@@ -8,6 +8,7 @@ import pytest
 from homeassistant.components.notify import DOMAIN as NOTIFY_DOMAIN
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
+from homeassistant.setup import async_setup_component
 
 from custom_components.ms365_mail.const import CONF_ENABLE_UPDATE
 from custom_components.ms365_mail.integration.const_integration import (
@@ -160,11 +161,15 @@ async def test_autoreply_failed_permission(
     )
 
 
-async def test_notify1(
+async def test_notify(
     hass: HomeAssistant,
     setup_update_integration,
+    base_config_entry: MS365MockConfigEntry,
 ) -> None:
     """Test notify - HA Service."""
+    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
+    await hass.async_block_till_done()
+
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -183,11 +188,6 @@ async def test_notify1(
         mock_new_message.mock_calls
     )
 
-async def test_notify2(
-    hass: HomeAssistant,
-    setup_update_integration,
-) -> None:
-    """Test notify - HA Service."""
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -210,11 +210,6 @@ async def test_notify2(
         mock_new_message.mock_calls
     )
 
-async def test_notify3(
-    hass: HomeAssistant,
-    setup_update_integration,
-) -> None:
-    """Test notify - HA Service."""
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -234,11 +229,6 @@ async def test_notify3(
         in str(mock_new_message.mock_calls)
     )
 
-async def test_notify4(
-    hass: HomeAssistant,
-    setup_update_integration,
-) -> None:
-    """Test notify - HA Service."""
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -259,13 +249,17 @@ async def test_notify4(
     )
 
 
-async def test_notify_attachments1(
+async def test_notify_attachments(
     adjust_config_dir,
     hass: HomeAssistant,
     setup_update_integration,
+    base_config_entry: MS365MockConfigEntry,
     tmp_path,
 ) -> None:
     """Test notify - HA Service."""
+    assert await async_setup_component(hass, NOTIFY_DOMAIN, base_config_entry)
+    await hass.async_block_till_done()
+
     filepath = attachment_setup(tmp_path, "sendfile.txt")
     attachment_setup(tmp_path, "sendphoto.jpg")
 
@@ -310,15 +304,6 @@ async def test_notify_attachments1(
     # assert mock_new_message.called
     # assert "'name': 'archive.zip'" in str(mock_new_message.mock_calls)
 
-async def test_notify_attachments2(
-    adjust_config_dir,
-    hass: HomeAssistant,
-    setup_update_integration,
-    tmp_path,
-) -> None:
-    """Test notify - HA Service."""
-
-    attachment_setup(tmp_path, "sendphoto.jpg")
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -339,14 +324,6 @@ async def test_notify_attachments2(
     assert mock_new_message.called
     assert "'name': 'zipfile.zip'" in str(mock_new_message.mock_calls)
 
-async def test_notify_attachments3(
-    adjust_config_dir,
-    hass: HomeAssistant,
-    setup_update_integration,
-    tmp_path,
-) -> None:
-    """Test notify - HA Service."""
-    attachment_setup(tmp_path, "sendphoto.jpg")
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -366,14 +343,6 @@ async def test_notify_attachments3(
     assert "'name': 'sendphoto.jpg'" in str(mock_new_message.mock_calls)
     assert "'isInline': True" in str(mock_new_message.mock_calls)
 
-async def test_notify_attachments4(
-    adjust_config_dir,
-    hass: HomeAssistant,
-    setup_update_integration,
-    tmp_path,
-) -> None:
-    """Test notify - HA Service."""
-    attachment_setup(tmp_path, "sendphoto.jpg")
     with patch("O365.connection.Connection.post") as mock_new_message:
         await hass.services.async_call(
             NOTIFY_DOMAIN,
@@ -393,14 +362,6 @@ async def test_notify_attachments4(
     print(mock_new_message.mock_calls)
     assert '<img src="https://sendphoto.jpg">' in str(mock_new_message.mock_calls)
 
-async def test_notify_attachments5(
-    adjust_config_dir,
-    hass: HomeAssistant,
-    setup_update_integration,
-    tmp_path,
-) -> None:
-    """Test notify - HA Service."""
-    attachment_setup(tmp_path, "sendphoto.jpg")
     with (
         patch("O365.connection.Connection.post") as mock_new_message,
         pytest.raises(ValueError) as exc_info,
@@ -423,7 +384,7 @@ async def test_notify_attachments5(
     assert "Could not access file /config/nofile.txt at" in str(exc_info.value)
 
 
-async def test_notify_failed_permission1(
+async def test_notify_failed_permission(
     hass: HomeAssistant,
     setup_update_integration,
     caplog: pytest.LogCaptureFixture,
