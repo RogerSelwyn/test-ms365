@@ -29,8 +29,10 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_integration_get_service(hass, config, discovery_info=None):  # pylint: disable=unused-argument
     """Get the service."""
-    if discovery_info is None or not hasattr(
-        discovery_info[CONF_ENTRY], "runtime_data"
+    if (
+        discovery_info is None
+        or not hasattr(discovery_info[CONF_ENTRY], "runtime_data")
+        or discovery_info[CONF_ENTRY].runtime_data is None
     ):  # pragma: no cover
         return
 
