@@ -15,13 +15,19 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_do_setup(hass: HomeAssistant, entry: ConfigEntry, account):
     """Run the setup after we have everything configured."""
-
+    print("$$$$$$$$$$$$$$$$$$$$$")
+    print(entry.data)
     _LOGGER.debug("Sensor setup - start")
     email_coordinator = MS365SensorCoordinator(hass, entry, account)
     await email_coordinator.async_config_entry_first_refresh()
-    _LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    _LOGGER.info(entry.data[CONF_ENABLE_UPDATE])
-    _LOGGER.info(email_coordinator)
+    _LOGGER.debug("Email setup - finish")
+    return email_coordinator, email_coordinator.keys, PLATFORMS
+
+
+async def async_extra_platform_setup(hass: HomeAssistant, entry: ConfigEntry):
+    """Setup notify platform."""
+    print("£££££££££££££")
+    print(entry.data)
     if entry.data[CONF_ENABLE_UPDATE]:
         hass.async_create_task(
             discovery.async_load_platform(
@@ -32,5 +38,3 @@ async def async_do_setup(hass: HomeAssistant, entry: ConfigEntry, account):
                 {},
             )
         )
-    _LOGGER.debug("Email setup - finish")
-    return email_coordinator, email_coordinator.keys, PLATFORMS
